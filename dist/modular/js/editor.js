@@ -18,9 +18,9 @@ gj.editor.config = {
 
         /** The width of the editor. Numeric values are treated as pixels.         */        width: undefined,
 
-        /** The name of the UI library that is going to be in use. Currently we support only Material Design and Bootstrap.          */        uiLibrary: 'materialdesign',
+        /** The name of the UI library that is going to be in use. Currently we support only Material Design and Bootstrap.          */        uiLibrary: 'bootstrap4',
 
-        /** The name of the icons library that is going to be in use. Currently we support Material Icons and Font Awesome.         */        iconsLibrary: 'materialicons',
+        /** The name of the icons library that is going to be in use. Currently we support Material Icons and Font Awesome.         */        iconsLibrary: 'fontawesome',
 
         /** The language that needs to be in use.         */        locale: 'en-us',
 
@@ -91,10 +91,10 @@ gj.editor.config = {
             alignRight: '<i class="fa fa-align-right" aria-hidden="true"></i>',
             alignJustify: '<i class="fa fa-align-justify" aria-hidden="true"></i>',
 
-            user: '<i class="fa fa-user pr-2" aria-hidden="true"></i>',
-            confirmation: '<i class="fa fa-exclamation pr-2" aria-hidden="true"></i>',
-            login: '<i class="fa fa-link pr-2" aria-hidden="true"></i>',
-            email: '<i class="fa fa-at pr-2" aria-hidden="true"></i>',
+            user: '<i class="fa fa-user align-text-top" aria-hidden="true"></i>',
+            confirmation: '<i class="fa fa-exclamation align-text-top" aria-hidden="true"></i>',
+            login: '<i class="fa fa-link align-text-top" aria-hidden="true"></i>',
+            email: '<i class="fa fa-at align-text-to" aria-hidden="true"></i>',
 
             undo: '<i class="fa fa-undo" aria-hidden="true"></i>',
             redo: '<i class="fa fa-repeat" aria-hidden="true"></i>'
@@ -180,6 +180,7 @@ gj.editor.methods = {
         msg.name = "Displays the user's first and last name, if set. Otherwise, it will display the user's email address. (Generally used with import files)";
         msg.email = "Displays the user's email address. ";
 
+
         if (typeof (data.buttons) === 'undefined') {
             data.buttons = [
                 [
@@ -194,23 +195,33 @@ gj.editor.methods = {
                     '<button type="button" class="' + data.style.button + '" title="' + msg.indentDecrease + '" role="outdent">' + data.icons.indentDecrease + '</button>',
                     '<button type="button" class="' + data.style.button + '" title="' + msg.indentIncrease + '" role="indent">' + data.icons.indentIncrease + '</button>'
                 ],
-                [
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.alignLeft + '" role="justifyleft">' + data.icons.alignLeft + '</button>',
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.alignCenter + '" role="justifycenter">' + data.icons.alignCenter + '</button>',
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.alignRight + '" role="justifyright">' + data.icons.alignRight + '</button>',
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.alignJustify + '" role="justifyfull">' + data.icons.alignJustify + '</button>'
-                ],
-                [
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.name  + '" role="name">' + data.icons.user + 'User' + '</button>',
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + 'Confiramation' + '</button>',
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.login_link + '" role="login_link">' + data.icons.login + 'Login' + '</button>',
-                    '<button type="button" class="' + data.style.button + '" title="' + msg.email + '" role="email">' + data.icons.email + 'Email' + '</button>'
-                ],
+            ];
+            if(!data.hideAlignmentButtons) {
+                data.buttons.push( 
+                    [
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.alignLeft + '" role="justifyleft">' + data.icons.alignLeft + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.alignCenter + '" role="justifycenter">' + data.icons.alignCenter + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.alignRight + '" role="justifyright">' + data.icons.alignRight + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.alignJustify + '" role="justifyfull">' + data.icons.alignJustify + '</button>'
+                    ]
+                );
+            }
+            if(data.welcomeEmailButtons) {
+                data.buttons.push( 
+                    [
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.name  + '" role="name">' + data.icons.user + '<span class="align-top pl-2">User</span>' + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + '<span class="align-top pl-2">Confiramation</span>' + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.login_link + '" role="login_link">' + data.icons.login + '<span class="align-top pl-2">Login</span>' + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.email + '" role="email">' + data.icons.email + '<span class="align-top pl-2">Email</span>' + '</button>'
+                    ]
+                )
+            }
+            data.buttons.push(
                 [
                     '<button type="button" class="' + data.style.button + '" title="' + msg.undo + '" role="undo">' + data.icons.undo + '</button>',
                     '<button type="button" class="' + data.style.button + '" title="' + msg.redo + '" role="redo">' + data.icons.redo + '</button>'
                 ]
-            ];
+            )
         }
     },
 
