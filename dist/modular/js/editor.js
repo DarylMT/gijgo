@@ -6,7 +6,7 @@
  * Released under the MIT license
  */
 /* global window alert jQuery */
-/**  */gj.editor = {
+/**  */gj.editor = {
     plugins: {},
     messages: {}
 };
@@ -14,15 +14,15 @@
 gj.editor.config = {
     base: {
 
-        /** The height of the editor. Numeric values are treated as pixels.         */        height: 300,
+        /** The height of the editor. Numeric values are treated as pixels.         */        height: 300,
 
-        /** The width of the editor. Numeric values are treated as pixels.         */        width: undefined,
+        /** The width of the editor. Numeric values are treated as pixels.         */        width: undefined,
 
-        /** The name of the UI library that is going to be in use. Currently we support only Material Design and Bootstrap.          */        uiLibrary: 'materialdesign',
+        /** The name of the UI library that is going to be in use. Currently we support only Material Design and Bootstrap.          */        uiLibrary: 'materialdesign',
 
-        /** The name of the icons library that is going to be in use. Currently we support Material Icons and Font Awesome.         */        iconsLibrary: 'materialicons',
+        /** The name of the icons library that is going to be in use. Currently we support Material Icons and Font Awesome.         */        iconsLibrary: 'materialicons',
 
-        /** The language that needs to be in use.         */        locale: 'en-us',
+        /** The language that needs to be in use.         */        locale: 'en-us',
 
         buttons: undefined,
 
@@ -47,7 +47,7 @@ gj.editor.config = {
         style: {
             wrapper: 'gj-editor gj-editor-bootstrap',
             buttonsGroup: 'btn-group',
-            button: 'btn btn-outline-secondary gj-cursor-pointer',
+            button: 'btn btn-light gj-cursor-pointer',
             buttonActive: 'active'
         }
     },
@@ -90,6 +90,11 @@ gj.editor.config = {
             alignCenter: '<i class="fa fa-align-center" aria-hidden="true"></i>',
             alignRight: '<i class="fa fa-align-right" aria-hidden="true"></i>',
             alignJustify: '<i class="fa fa-align-justify" aria-hidden="true"></i>',
+
+            user: '<i class="fa fa-user pr-2" aria-hidden="true"></i>',
+            confirmation: '<i class="fa fa-exclamation pr-2" aria-hidden="true"></i>',
+            login: '<i class="fa fa-link pr-2" aria-hidden="true"></i>',
+            email: '<i class="fa fa-at pr-2" aria-hidden="true"></i>',
 
             undo: '<i class="fa fa-undo" aria-hidden="true"></i>',
             redo: '<i class="fa fa-repeat" aria-hidden="true"></i>'
@@ -170,6 +175,11 @@ gj.editor.methods = {
 
     localization: function (data) {
         var msg = gj.editor.messages[data.locale];
+        msg.confirmation_link = "The user will click this link in order to confirm his/her account and create a password. This is the initial login / account setup link for the user. This link is single-use once the user is confirmed. REQUIRED";
+        msg.login_link = "This is the link that the user can follow at any time to log in to your campus dashboard. REQUIRED";
+        msg.name = "Displays the user's first and last name, if set. Otherwise, it will display the user's email address. (Generally used with import files)";
+        msg.email = "Displays the user's email address. ";
+
         if (typeof (data.buttons) === 'undefined') {
             data.buttons = [
                 [
@@ -189,6 +199,12 @@ gj.editor.methods = {
                     '<button type="button" class="' + data.style.button + '" title="' + msg.alignCenter + '" role="justifycenter">' + data.icons.alignCenter + '</button>',
                     '<button type="button" class="' + data.style.button + '" title="' + msg.alignRight + '" role="justifyright">' + data.icons.alignRight + '</button>',
                     '<button type="button" class="' + data.style.button + '" title="' + msg.alignJustify + '" role="justifyfull">' + data.icons.alignJustify + '</button>'
+                ],
+                [
+                    '<button type="button" class="' + data.style.button + '" title="' + msg.name  + '" role="name">' + data.icons.user + 'User' + '</button>',
+                    '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + 'Confiramation' + '</button>',
+                    '<button type="button" class="' + data.style.button + '" title="' + msg.login_link + '" role="login_link">' + data.icons.login + 'Login' + '</button>',
+                    '<button type="button" class="' + data.style.button + '" title="' + msg.email + '" role="email">' + data.icons.email + 'Email' + '</button>'
                 ],
                 [
                     '<button type="button" class="' + data.style.button + '" title="' + msg.undo + '" role="undo">' + data.icons.undo + '</button>',
@@ -212,7 +228,13 @@ gj.editor.methods = {
 
     executeCmd: function (editor, body, toolbar, btn, data) {
         body.focus();
-        document.execCommand(btn.getAttribute('role'), false);
+        var extraRoles = ['name', 'email', 'confirmation_link', 'login_link'];
+        var role = btn.getAttribute('role');
+        if (extraRoles.includes(btn.getAttribute('role'))){
+            document.execCommand('insertText', false, '[[' + role + ']] ');
+        }else {
+            document.execCommand(btn.getAttribute('role'), false);
+        }
         gj.editor.methods.updateToolbar(editor, toolbar, data);
     },
 
@@ -246,13 +268,13 @@ gj.editor.events = {
 
     /**
      * Event fires before change of text in the editor.
-     *     */    changing: function (el) {
+     *     */    changing: function (el) {
         return el.dispatchEvent(new Event('changing'));
     },
 
     /**
      * Event fires after change of text in the editor.
-     *     */    changed: function (el) {
+     *     */    changed: function (el) {
         return el.dispatchEvent(new Event('changed'));
     }
 };
@@ -263,11 +285,11 @@ GijgoEditor = function (element, jsConfig) {
 
     self.element = element;
 
-    /** Get or set html content in the body.     */    self.content = function (html) {
+    /** Get or set html content in the body.     */    self.content = function (html) {
         return methods.content(this, html);
     };
 
-    /** Remove editor functionality from the element.     */    self.destroy = function () {
+    /** Remove editor functionality from the element.     */    self.destroy = function () {
         return methods.destroy(this);
     };
 
