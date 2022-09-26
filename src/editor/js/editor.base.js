@@ -306,7 +306,7 @@ gj.editor.methods = {
                 data.buttons.push( 
                     [
                         '<button type="button" class="' + data.style.button + '" title="' + msg.name  + '" role="name">' + data.icons.user + '<span class="align-top pl-2">User</span>' + '</button>',
-                        '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + '<span class="align-top pl-2">Confiramation<span title="required" class="text-danger"> *</span></span>' + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + '<span class="align-top pl-2">Confirmation<span title="required" class="text-danger"> *</span></span>' + '</button>',
                         '<button type="button" class="' + data.style.button + '" title="' + msg.login_link + '" role="login_link">' + data.icons.login + '<span class="align-top pl-2">Login<span title="required" class="text-danger"> *</span></span>' + '</button>',
                         '<button type="button" class="' + data.style.button + '" title="' + msg.email + '" role="email">' + data.icons.email + '<span class="align-top pl-2">Email</span>' + '</button>'
                     ]
