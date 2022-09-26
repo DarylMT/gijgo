@@ -144,10 +144,19 @@ gj.editor.methods = {
                 e.preventDefault();
             }
         });
-        body.addEventListener('mouseup keyup mouseout cut paste', function (e) {
-            self.updateToolbar(editor, toolbar, data);
-            gj.editor.events.changed(editor);
-            editor.html(body.html());
+
+        function onChanged(){
+            gj.editor.methods.updateToolbar(editor, toolbar, data);
+            gj.editor.events.changed(editor, editor.element);
+            editor.element.value = body.innerHTML;
+        }
+
+        var keyEvents = ['keyup', 'mouseup', 'paste', 'cut', 'mouseout', 'click'];
+
+        keyEvents.forEach(function(key){
+            body.addEventListener(key, function (e) {
+                onChanged()
+            });
         });
 
         toolbar = wrapper.querySelector('div[role="toolbar"]');
@@ -210,8 +219,8 @@ gj.editor.methods = {
                 data.buttons.push( 
                     [
                         '<button type="button" class="' + data.style.button + '" title="' + msg.name  + '" role="name">' + data.icons.user + '<span class="align-top pl-2">User</span>' + '</button>',
-                        '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + '<span class="align-top pl-2">Confiramation</span>' + '</button>',
-                        '<button type="button" class="' + data.style.button + '" title="' + msg.login_link + '" role="login_link">' + data.icons.login + '<span class="align-top pl-2">Login</span>' + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.confirmation_link + '" role="confirmation_link">' + data.icons.confirmation + '<span class="align-top pl-2">Confiramation<span title="required" class="text-danger"> *</span></span>' + '</button>',
+                        '<button type="button" class="' + data.style.button + '" title="' + msg.login_link + '" role="login_link">' + data.icons.login + '<span class="align-top pl-2">Login<span title="required" class="text-danger"> *</span></span>' + '</button>',
                         '<button type="button" class="' + data.style.button + '" title="' + msg.email + '" role="email">' + data.icons.email + '<span class="align-top pl-2">Email</span>' + '</button>'
                     ]
                 )
@@ -285,7 +294,8 @@ gj.editor.events = {
 
     /**
      * Event fires after change of text in the editor.
-     *     */    changed: function (el) {
+     *     */    changed: function (editor, el) {
+        el.innerHTML = editor.content();
         return el.dispatchEvent(new Event('changed'));
     }
 };
